@@ -14,7 +14,13 @@ class AminoAcidLL{
    * pair and increments the codon counter for that codon.
    * NOTE: Does not check for repeats!! */
   AminoAcidLL(String inCodon){
-  
+    this.aminoAcid = AminoAcidResources.getAminoAcidFromCodon(inCodon);
+    this.codons = AminoAcidResources.getCodonListForAminoAcid(aminoAcid);
+    this.counts = new int[codons.length];
+    for (int i = 0; i < codons.length; i++) {
+      if (codons[i].equals(inCodon))
+        counts[i]++;
+    }
   }
 
   /********************************************************************************************/
@@ -24,15 +30,33 @@ class AminoAcidLL{
    * If there is no next node, add a new node to the list that would contain the codon. 
    */
   private void addCodon(String inCodon){
-  
+    if(this.next == null){
+      this.next = new AminoAcidLL(inCodon);
+      return;
+    }
+
+    for (int i = 0; i < this.codons.length; i++) {
+      if(inCodon.equals(this.codons[i])){
+        counts[i]++;
+        return;
+      }
+    }
+
+    this.next.addCodon(inCodon);
+
   }
 
 
   /********************************************************************************************/
   /* Shortcut to find the total number of instances of this amino acid */
   private int totalCount(){
-    return 0;
+    int sum = 0;
+    for (int i = 0; i < this.counts.length; i++) {
+      sum += counts[i];
+    }
+    return sum;
   }
+
 
   /********************************************************************************************/
   /* helper method for finding the list difference on two matching nodes
@@ -56,7 +80,7 @@ class AminoAcidLL{
   /********************************************************************************************/
   /* Recursive method that finds the differences in **Amino Acid** counts. 
    * the list *must* be sorted to use this method */
-  public int aminoAcidCompare(AminoAcidLL inList){
+  public int aminoAcidCompare(AminoAcidLL inList) {
     return 0;
   }
 
