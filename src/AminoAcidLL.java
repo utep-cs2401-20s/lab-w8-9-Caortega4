@@ -21,6 +21,8 @@ class AminoAcidLL{
       if (codons[i].equals(inCodon))
         counts[i]++;
     }
+
+    this.next = null;
   }
 
   /********************************************************************************************/
@@ -30,16 +32,18 @@ class AminoAcidLL{
    * If there is no next node, add a new node to the list that would contain the codon. 
    */
   private void addCodon(String inCodon){
+    if(this.aminoAcid == AminoAcidResources.getAminoAcidFromCodon(inCodon)) {
+      for (int i = 0; i < this.codons.length; i++) {
+        if (inCodon.equals(this.codons[i])) {
+          counts[i]++;
+          return;
+        }
+      }
+    }
+
     if(this.next == null){
       this.next = new AminoAcidLL(inCodon);
       return;
-    }
-
-    for (int i = 0; i < this.codons.length; i++) {
-      if(inCodon.equals(this.codons[i])){
-        counts[i]++;
-        return;
-      }
     }
 
     this.next.addCodon(inCodon);
@@ -81,13 +85,16 @@ class AminoAcidLL{
   /* Recursive method that finds the differences in **Amino Acid** counts. 
    * the list *must* be sorted to use this method */
   public int aminoAcidCompare(AminoAcidLL inList) {
-    return 0;
+    if(this.aminoAcid == inList.aminoAcid)
+      return Math.abs(inList.totalCount() - this.totalCount());
+    return aminoAcidCompare(inList.next);
   }
 
   /********************************************************************************************/
-  /* Same ad above, but counts the codon usage differences
+  /* Same as above, but counts the codon usage differences
    * Must be sorted. */
   public int codonCompare(AminoAcidLL inList){
+
     return 0;
   }
 
@@ -115,7 +122,29 @@ class AminoAcidLL{
   /********************************************************************************************/
   /* Static method for generating a linked list from an RNA sequence */
   public static AminoAcidLL createFromRNASequence(String inSequence){
-    return null;
+    //If the sequence has less than the length of a codon it returns null
+    if (inSequence.length() < 3){
+      return null;
+    }
+    //Gets the first codon
+    String nextCodon = inSequence.substring(0, 3);
+    //Create the head reference memory allocation
+    AminoAcidLL head = new AminoAcidLL();
+    //Keep adding codons until it finds a STOP or an invalid codon
+    while (AminoAcidResources.getAminoAcidFromCodon(nextCodon) != '*' || AminoAcidResources.getAminoAcidFromCodon(nextCodon) != (char)0){
+      //If the list is empty create the head and change the what the next codon is
+      if (head == null){
+        head = new AminoAcidLL(nextCodon);
+        inSequence = inSequence.substring(3);
+        nextCodon = inSequence.substring(0,3);
+      }
+      //Add a codon to the list and change what the next codon is
+      head.addCodon(nextCodon);
+      inSequence = inSequence.substring(3);
+      nextCodon = inSequence.substring(0,3);
+    }
+
+      return head;
   }
 
 
@@ -124,4 +153,7 @@ class AminoAcidLL{
   public static AminoAcidLL sort(AminoAcidLL inList){
     return null;
   }
+
+  /********************************************************************************************/
+
 }
