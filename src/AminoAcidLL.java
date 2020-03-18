@@ -31,7 +31,11 @@ class AminoAcidLL{
    * if not passes the task to the next node. 
    * If there is no next node, add a new node to the list that would contain the codon. 
    */
-  private void addCodon(String inCodon){
+  /*******************************************/
+  /*******************************************/
+  /*******************************************/
+  /********change public to private used for testing***********************************/
+  public void addCodon(String inCodon){
     if(this.aminoAcid == AminoAcidResources.getAminoAcidFromCodon(inCodon)) {
       for (int i = 0; i < this.codons.length; i++) {
         if (inCodon.equals(this.codons[i])) {
@@ -129,19 +133,26 @@ class AminoAcidLL{
     //Gets the first codon
     String nextCodon = inSequence.substring(0, 3);
     //Create the head reference memory allocation
-    AminoAcidLL head = new AminoAcidLL();
+    AminoAcidLL head = null;
     //Keep adding codons until it finds a STOP or an invalid codon
-    while (AminoAcidResources.getAminoAcidFromCodon(nextCodon) != '*' || AminoAcidResources.getAminoAcidFromCodon(nextCodon) != (char)0){
+    while ((AminoAcidResources.getAminoAcidFromCodon(nextCodon) != '*') && (AminoAcidResources.getAminoAcidFromCodon(nextCodon) != (char)0)){
       //If the list is empty create the head and change the what the next codon is
       if (head == null){
         head = new AminoAcidLL(nextCodon);
         inSequence = inSequence.substring(3);
-        nextCodon = inSequence.substring(0,3);
+        if(inSequence.length() < 2) {
+          nextCodon = inSequence;
+        }else {
+          nextCodon = inSequence.substring(0, 3);
+        }
+
+      }else {
+        //Add a codon to the list and change what the next codon is
+        head.addCodon(nextCodon);
+
+        inSequence = inSequence.substring(3);
+        nextCodon = (inSequence.length() == 3) ? inSequence : inSequence.substring(0,3);
       }
-      //Add a codon to the list and change what the next codon is
-      head.addCodon(nextCodon);
-      inSequence = inSequence.substring(3);
-      nextCodon = inSequence.substring(0,3);
     }
 
       return head;
@@ -155,5 +166,11 @@ class AminoAcidLL{
   }
 
   /********************************************************************************************/
-
+  public void printList(){
+    AminoAcidLL pointer = this;
+    while(pointer != null) {
+      System.out.print(pointer.aminoAcid);
+      pointer = pointer.next;
+    }
+  }
 }
