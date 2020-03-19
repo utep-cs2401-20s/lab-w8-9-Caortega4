@@ -8,7 +8,10 @@ public class AminoAcidLLTester {
     public void AminoAcidLLTest1(){
         AminoAcidLL dummy = AminoAcidLL.createFromRNASequence("GGGGCCGAGUUCUGCCACGACAUACUCAUGAACCCCCAGCGUGUGUGGAGCACGUAG");
         dummy.printList();
-        AminoAcidLL.sort(dummy).printList();
+        System.out.println(dummy.isSorted());
+        dummy = AminoAcidLL.sort(dummy);
+        dummy.printList();
+        System.out.println(dummy.isSorted());
 
 
     }

@@ -119,8 +119,10 @@ class AminoAcidLL{
   /********************************************************************************************/
   /* recursively determines if a linked list is sorted or not */
   public boolean isSorted(){
-
-    return false;
+    if(this.next == null) return true;
+    if(this.aminoAcid > this.next.aminoAcid){
+      return false;
+    } return this.next.isSorted();
   }
 
 
