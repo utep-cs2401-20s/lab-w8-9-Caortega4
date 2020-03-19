@@ -35,7 +35,7 @@ class AminoAcidLL{
   /*******************************************/
   /*******************************************/
   /********change public to private used for testing***********************************/
-  public void addCodon(String inCodon){
+  private void addCodon(String inCodon){
     if(this.aminoAcid == AminoAcidResources.getAminoAcidFromCodon(inCodon)) {
       for (int i = 0; i < this.codons.length; i++) {
         if (inCodon.equals(this.codons[i])) {
@@ -119,6 +119,7 @@ class AminoAcidLL{
   /********************************************************************************************/
   /* recursively determines if a linked list is sorted or not */
   public boolean isSorted(){
+
     return false;
   }
 
@@ -149,7 +150,6 @@ class AminoAcidLL{
       }else {
         //Add a codon to the list and change what the next codon is
         head.addCodon(nextCodon);
-
         inSequence = inSequence.substring(3);
         nextCodon = (inSequence.length() == 3) ? inSequence : inSequence.substring(0,3);
       }
@@ -162,7 +162,30 @@ class AminoAcidLL{
   /********************************************************************************************/
   /* sorts a list by amino acid character*/
   public static AminoAcidLL sort(AminoAcidLL inList){
-    return null;
+    AminoAcidLL beforeNode = inList;
+    AminoAcidLL checkingNode = beforeNode.next;
+    AminoAcidLL nextNode = null;
+    AminoAcidLL head = inList;
+    AminoAcidLL insertionPosition = null;
+    while(checkingNode != null){
+      nextNode = checkingNode.next;
+      insertionPosition = findInsertionPosition(head, checkingNode);
+
+      if(insertionPosition == beforeNode){
+        beforeNode = checkingNode;
+      }else{
+        beforeNode.next = checkingNode.next;
+        if(insertionPosition == null){
+          checkingNode.next = head;
+          head = checkingNode;
+        }else{
+          checkingNode.next = insertionPosition.next;
+          insertionPosition.next = checkingNode;
+        }
+      }
+      checkingNode = nextNode;
+    }
+    return head;
   }
 
   /********************************************************************************************/
@@ -172,5 +195,18 @@ class AminoAcidLL{
       System.out.print(pointer.aminoAcid);
       pointer = pointer.next;
     }
+    System.out.println("");
+  }
+  /********************************************************************************************/
+  private static AminoAcidLL findInsertionPosition(AminoAcidLL inList, AminoAcidLL aminoAcid){
+    AminoAcidLL head = inList;
+    char checkingLetter = aminoAcid.aminoAcid;
+    AminoAcidLL position = null;
+    AminoAcidLL checkingPosition = head;
+    while(checkingPosition != null && checkingLetter > checkingPosition.aminoAcid ){
+      position = checkingPosition;
+      checkingPosition = checkingPosition.next;
+    }
+    return position;
   }
 }

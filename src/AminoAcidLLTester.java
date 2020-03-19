@@ -6,7 +6,10 @@ import org.junit.jupiter.api.Test;
 public class AminoAcidLLTester {
     @Test
     public void AminoAcidLLTest1(){
-        AminoAcidLL dummy = AminoAcidLL.createFromRNASequence("CCGUUGGCACUGUUGUGA");
+        AminoAcidLL dummy = AminoAcidLL.createFromRNASequence("GGGGCCGAGUUCUGCCACGACAUACUCAUGAACCCCCAGCGUGUGUGGAGCACGUAG");
         dummy.printList();
+        AminoAcidLL.sort(dummy).printList();
+
+
     }
 }
