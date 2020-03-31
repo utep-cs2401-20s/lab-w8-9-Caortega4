@@ -6,13 +6,50 @@ import org.junit.jupiter.api.Test;
 public class AminoAcidLLTester {
     @Test
     public void AminoAcidLLTest1(){
+        //Expected codon sequence: "GAEFCHDILMNPQRVWST"
+        String expected = "GAEFCHDILMNPQRVWST";
         AminoAcidLL dummy = AminoAcidLL.createFromRNASequence("GGGGCCGAGUUCUGCCACGACAUACUCAUGAACCCCCAGCGUGUGUGGAGCACGUAG");
-        dummy.printList();
-        System.out.println(dummy.isSorted());
+        for (int i = 0; i < expected.length(); i++) {
+            assertEquals(expected.charAt(i), dummy.aminoAcid);
+            dummy = dummy.next;
+        }
+
+    }
+
+    @Test
+    public void AminoAcidLLTest2(){
+        //Test for isSorted when the list is not sorted
+        //expected: false
+        //Codon sequence : "GAEFCHDILMNPQRVWST"
+        AminoAcidLL dummy = AminoAcidLL.createFromRNASequence("GGGGCCGAGUUCUGCCACGACAUACUCAUGAACCCCCAGCGUGUGUGGAGCACGUAG");
+        assertEquals(false, dummy.isSorted());
+
+    }
+
+    @Test
+    public void AminoAcidLLTest3(){
+        //Test for isSorted when the list is sorted
+        //expected: true
+        //Codon sequence : "STV"
+        AminoAcidLL dummy = AminoAcidLL.createFromRNASequence("ACGUAGUGG");
+        assertEquals(true, dummy.isSorted());
+
+    }
+
+    @Test
+    public void AminoAcidLLTest4(){
+        //Test for sort with help of isSorted()
+        //expected: true
+        //Codon sequence before sort: "GAEFCHDILMNPQRVWST"
+        AminoAcidLL dummy = AminoAcidLL.createFromRNASequence("GGGGCCGAGUUCUGCCACGACAUACUCAUGAACCCCCAGCGUGUGUGGAGCACGUAG");
         dummy = AminoAcidLL.sort(dummy);
-        dummy.printList();
-        System.out.println(dummy.isSorted());
+        assertEquals(true, dummy.isSorted());
 
+    }
 
+    @Test
+    public void AminoAcidLLTest5(){
+        //Test for createFromRNASequence
+        //
     }
 }

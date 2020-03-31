@@ -31,10 +31,7 @@ class AminoAcidLL{
    * if not passes the task to the next node. 
    * If there is no next node, add a new node to the list that would contain the codon. 
    */
-  /*******************************************/
-  /*******************************************/
-  /*******************************************/
-  /********change public to private used for testing***********************************/
+
   private void addCodon(String inCodon){
     if(this.aminoAcid == AminoAcidResources.getAminoAcidFromCodon(inCodon)) {
       for (int i = 0; i < this.codons.length; i++) {
@@ -89,9 +86,7 @@ class AminoAcidLL{
   /* Recursive method that finds the differences in **Amino Acid** counts. 
    * the list *must* be sorted to use this method */
   public int aminoAcidCompare(AminoAcidLL inList) {
-    if(this.aminoAcid == inList.aminoAcid)
-      return Math.abs(inList.totalCount() - this.totalCount());
-    return aminoAcidCompare(inList.next);
+    return 0;
   }
 
   /********************************************************************************************/
@@ -106,7 +101,11 @@ class AminoAcidLL{
   /********************************************************************************************/
   /* Recursively returns the total list of amino acids in the order that they are in in the linked list. */
   public char[] aminoAcidList(){
-    return new char[]{};
+    if(this.next == null){
+      return new char[]{this.aminoAcid};
+    }
+    return null;
+
   }
 
   /********************************************************************************************/
@@ -139,7 +138,7 @@ class AminoAcidLL{
     AminoAcidLL head = null;
     //Keep adding codons until it finds a STOP or an invalid codon
     while ((AminoAcidResources.getAminoAcidFromCodon(nextCodon) != '*') && (AminoAcidResources.getAminoAcidFromCodon(nextCodon) != (char)0)){
-      //If the list is empty create the head and change the what the next codon is
+      //If the list is empty create the head and change what the next codon is
       if (head == null){
         head = new AminoAcidLL(nextCodon);
         inSequence = inSequence.substring(3);
