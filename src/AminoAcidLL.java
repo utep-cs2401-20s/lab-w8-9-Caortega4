@@ -34,6 +34,7 @@ class AminoAcidLL{
 
   private void addCodon(String inCodon){
     if(this.aminoAcid == AminoAcidResources.getAminoAcidFromCodon(inCodon)) {
+      //Checks for a matching combination to add 1 to that combination's count
       for (int i = 0; i < this.codons.length; i++) {
         if (inCodon.equals(this.codons[i])) {
           counts[i]++;
@@ -41,12 +42,12 @@ class AminoAcidLL{
         }
       }
     }
-
+    //If it reaches the end of the list it will create a new node with that aminoacid respective to that codon
     if(this.next == null){
       this.next = new AminoAcidLL(inCodon);
       return;
     }
-
+    //Recursive call to check the next node in position
     this.next.addCodon(inCodon);
 
   }
@@ -86,29 +87,60 @@ class AminoAcidLL{
   /* Recursive method that finds the differences in **Amino Acid** counts. 
    * the list *must* be sorted to use this method */
   public int aminoAcidCompare(AminoAcidLL inList) {
-    return 0;
+    //Base case both pointers have a null reference
+    if(this == null && inList == null){
+      return 0;
+    }
+    //Case when aminoacids match
+    if(this.aminoAcid == inList.aminoAcid){
+      return this.totalDiff(inList) + this.next.aminoAcidCompare(inList.next);
+    }
+    //Cases when this aminoAcid has an aminoacid that inList pointer does not
+    if(this.aminoAcid < inList.aminoAcid){
+      return this.totalCount() + this.next.aminoAcidCompare(inList);
+    }
+    //Cases when inList aminoAcid has an aminoacid that this does not
+    return inList.totalCount() + this.aminoAcidCompare(inList.next);
   }
 
   /********************************************************************************************/
   /* Same as above, but counts the codon usage differences
    * Must be sorted. */
   public int codonCompare(AminoAcidLL inList){
-    return 0;
+    //Base case both pointers have a null reference
+    if(this == null && inList == null){
+      return 0;
+    }
+    //Case when aminoacids match
+    if(this.aminoAcid == inList.aminoAcid){
+      return this.codonDiff(inList) + this.next.codonCompare(inList.next);
+    }
+    //Cases when this has an aminoAcid that inList pointer does not
+    if(this.aminoAcid < inList.aminoAcid){
+      return this.totalCount() + this.next.codonCompare(inList);
+    }
+    //Cases when inList aminoAcid has an aminoacid that this does not
+    return inList.totalCount() + this.codonCompare(inList.next);
   }
 
 
   /********************************************************************************************/
   /* Recursively returns the total list of amino acids in the order that they are in in the linked list. */
   public char[] aminoAcidList(){
+    //Base case for when the method reaches the end of the linked list
     if(this.next == null){
       return new char[]{this.aminoAcid};
     }
+    //Create an array where it will store all characters after the current node
     char[] a = next.aminoAcidList();
+    //Create an array where all the characters after the current node including the current character will be stored
     char[] net = new char[a.length+1];
     net[0] = aminoAcid;
+    //Copy the characters to the newest array
     for (int i = 0; i < a.length; i++) {
       net[i+1] = a[i];
     }
+
     return net;
 
   }
@@ -116,12 +148,16 @@ class AminoAcidLL{
   /********************************************************************************************/
   /* Recursively returns the total counts of amino acids in the order that they are in in the linked list. */
   public int[] aminoAcidCounts(){
+    //Base case for when the method reaches the end of the linked list
     if(this.next == null){
       return new int[]{this.totalCount()};
     }
+    //Create an array where it will store all the counts after the current node
     int[] a = next.aminoAcidCounts();
+    //Create an array where all the counts after the current node including the counts of the current aminoacid will be stored
     int[] net = new int[a.length+1];
     net[0] = this.totalCount();
+    //Copy the counts to the newest array
     for (int i = 0; i < a.length; i++) {
       net[i+1] = a[i];
     }
@@ -133,10 +169,14 @@ class AminoAcidLL{
   /********************************************************************************************/
   /* recursively determines if a linked list is sorted or not */
   public boolean isSorted(){
+    //Base case. if the method reaches the end of the list without returning false, then the list is sorted
     if(this.next == null) return true;
+    //Case where the method found out the list is not sorted, returns false
     if(this.aminoAcid > this.next.aminoAcid){
       return false;
-    } return this.next.isSorted();
+    }
+    //Recursive call to go to the next node
+    return this.next.isSorted();
   }
 
 
@@ -178,23 +218,28 @@ class AminoAcidLL{
   /********************************************************************************************/
   /* sorts a list by amino acid character*/
   public static AminoAcidLL sort(AminoAcidLL inList){
+    //Pointers to not lose track the references of the lists
     AminoAcidLL beforeNode = inList;
     AminoAcidLL checkingNode = beforeNode.next;
     AminoAcidLL nextNode = null;
     AminoAcidLL head = inList;
     AminoAcidLL insertionPosition = null;
+    //Loop that willl run until the list is fully sorted
     while(checkingNode != null){
       nextNode = checkingNode.next;
+      //Find the position of insertion for the node
       insertionPosition = findInsertionPosition(head, checkingNode);
-
+      //If statementes that take care of where the node will be placed
       if(insertionPosition == beforeNode){
         beforeNode = checkingNode;
       }else{
         beforeNode.next = checkingNode.next;
+        //If to check if the node should be the first element of the list
         if(insertionPosition == null){
           checkingNode.next = head;
           head = checkingNode;
-        }else{
+          //Else insert the node on its corresponding position
+          }else{
           checkingNode.next = insertionPosition.next;
           insertionPosition.next = checkingNode;
         }
@@ -219,6 +264,7 @@ class AminoAcidLL{
     char checkingLetter = aminoAcid.aminoAcid;
     AminoAcidLL position = null;
     AminoAcidLL checkingPosition = head;
+    //Looks for after what node the node that is being checked should be introduced, where the aminoacid that is next has a greater value
     while(checkingPosition != null && checkingLetter > checkingPosition.aminoAcid ){
       position = checkingPosition;
       checkingPosition = checkingPosition.next;

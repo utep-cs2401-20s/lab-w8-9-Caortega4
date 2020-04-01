@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 public class AminoAcidLLTester {
     @Test
     public void AminoAcidLLTest1(){
+        //Crete from RNA sequence test for regular performance
         //Expected codon sequence: "GAEFCHDILMNPQRVWST"
         String expected = "GAEFCHDILMNPQRVWST";
         AminoAcidLL dummy = AminoAcidLL.createFromRNASequence("GGGGCCGAGUUCUGCCACGACAUACUCAUGAACCCCCAGCGUGUGUGGAGCACGUAG");
@@ -53,5 +54,16 @@ public class AminoAcidLLTester {
         char[] expected = {'G','A','E','F','C','H','D','I','L','M','N','P','Q','R','V','W','S','T'};
         AminoAcidLL dummy = AminoAcidLL.createFromRNASequence("GGGGCCGAGUUCUGCCACGACAUACUCAUGAACCCCCAGCGUGUGUGGAGCACGUAG");
         assertArrayEquals(expected, dummy.aminoAcidList());
+    }
+
+    @Test
+    public void AminoAcidLLTest6(){
+        //Test for aminoAcidCounts regular performance test
+        //RNA sequence GGGEEA: 3 G's, 2 E's, 1 A
+        //expected output array = {3, 2, 1}
+        int[] expected = {3, 2, 1};
+        String testSequence = "GGAGGAGGAGAAGAAGCUUAG";
+        AminoAcidLL dummy = AminoAcidLL.createFromRNASequence(testSequence);
+        assertArrayEquals(expected, dummy.aminoAcidCounts());
     }
 }
