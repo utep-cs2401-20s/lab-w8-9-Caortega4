@@ -93,7 +93,6 @@ class AminoAcidLL{
   /* Same as above, but counts the codon usage differences
    * Must be sorted. */
   public int codonCompare(AminoAcidLL inList){
-
     return 0;
   }
 
@@ -104,14 +103,30 @@ class AminoAcidLL{
     if(this.next == null){
       return new char[]{this.aminoAcid};
     }
-    return null;
+    char[] a = next.aminoAcidList();
+    char[] net = new char[a.length+1];
+    net[0] = aminoAcid;
+    for (int i = 0; i < a.length; i++) {
+      net[i+1] = a[i];
+    }
+    return net;
 
   }
 
   /********************************************************************************************/
   /* Recursively returns the total counts of amino acids in the order that they are in in the linked list. */
   public int[] aminoAcidCounts(){
-    return new int[]{};
+    if(this.next == null){
+      return new int[]{this.totalCount()};
+    }
+    int[] a = next.aminoAcidCounts();
+    int[] net = new int[a.length+1];
+    net[0] = this.totalCount();
+    for (int i = 0; i < a.length; i++) {
+      net[i+1] = a[i];
+    }
+    return net;
+
   }
 
 

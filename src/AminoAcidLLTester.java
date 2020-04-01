@@ -49,7 +49,9 @@ public class AminoAcidLLTester {
 
     @Test
     public void AminoAcidLLTest5(){
-        //Test for createFromRNASequence
-        //
+        //Test for aminoAcidList regular performance test
+        char[] expected = {'G','A','E','F','C','H','D','I','L','M','N','P','Q','R','V','W','S','T'};
+        AminoAcidLL dummy = AminoAcidLL.createFromRNASequence("GGGGCCGAGUUCUGCCACGACAUACUCAUGAACCCCCAGCGUGUGUGGAGCACGUAG");
+        assertArrayEquals(expected, dummy.aminoAcidList());
     }
 }
