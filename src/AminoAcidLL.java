@@ -87,9 +87,13 @@ class AminoAcidLL{
   /* Recursive method that finds the differences in **Amino Acid** counts. 
    * the list *must* be sorted to use this method */
   public int aminoAcidCompare(AminoAcidLL inList) {
-    //Base case both pointers have a null reference
-    if(this == null && inList == null){
-      return 0;
+    //Case when there is at least a null reference
+    if (this.next == null || inList == null){
+      if (inList == null){
+        return this.totalCount();
+      }else{
+        return inList.totalCount() + this.codonCompare(inList.next);
+      }
     }
     //Case when aminoacids match
     if(this.aminoAcid == inList.aminoAcid){
@@ -107,9 +111,13 @@ class AminoAcidLL{
   /* Same as above, but counts the codon usage differences
    * Must be sorted. */
   public int codonCompare(AminoAcidLL inList){
-    //Base case both pointers have a null reference
-    if(this == null && inList == null){
-      return 0;
+    //Case when there is at least a null reference
+    if (this.next == null || inList == null){
+      if (inList == null){
+        return this.totalCount();
+      }else{
+        return inList.totalCount() + this.codonCompare(inList.next);
+      }
     }
     //Case when aminoacids match
     if(this.aminoAcid == inList.aminoAcid){
