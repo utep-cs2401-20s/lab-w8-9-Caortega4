@@ -5,7 +5,10 @@ class AminoAcidLL{
   AminoAcidLL next;
 
   AminoAcidLL(){
-
+    aminoAcid = '0';
+    codons = new String[0];
+    counts = new int[0];
+    next = null;
   }
 
 
@@ -87,12 +90,32 @@ class AminoAcidLL{
   /* Recursive method that finds the differences in **Amino Acid** counts. 
    * the list *must* be sorted to use this method */
   public int aminoAcidCompare(AminoAcidLL inList) {
+    //Base case when the pointers are at the last node of each list
+    if (this.next == null && inList.next == null){
+      return (this.aminoAcid == inList.aminoAcid) ? this.totalDiff(inList) : this.totalCount() + inList.totalCount();
+    }
     //Case when there is at least a null reference
-    if (this.next == null || inList == null){
-      if (inList == null){
-        return this.totalCount();
+    if(this.next == null || inList.next == null){
+      //Cases when this is the last node
+      if(this.next == null){
+        //If statements to check if there is a possibility of a matching node, if there is not return the total counts of the remaining lists
+        if (this.aminoAcid < inList.aminoAcid){
+          return this.totalCount() + aminoCompareRestOfList(inList);
+        }if (this.aminoAcid > inList.aminoAcid){
+          return inList.totalCount() + this.aminoAcidCompare(inList.next);
+        }else {
+          return this.totalDiff(inList) + aminoCompareRestOfList(inList.next);
+        }
+      //inList.next is null
       }else{
-        return inList.totalCount() + this.codonCompare(inList.next);
+        //If statements to check if there is a possibility of a matching node, if there is not return the total counts of the remaining lists
+        if(inList.aminoAcid < this.aminoAcid ){
+          return inList.totalCount() + aminoCompareRestOfList(this);
+        }if(inList.aminoAcid > this.aminoAcid){
+          return this.totalCount() + this.next.aminoAcidCompare(inList);
+        }else{
+          return this.totalDiff(inList) + aminoCompareRestOfList(this.next);
+        }
       }
     }
     //Case when aminoacids match
@@ -111,12 +134,32 @@ class AminoAcidLL{
   /* Same as above, but counts the codon usage differences
    * Must be sorted. */
   public int codonCompare(AminoAcidLL inList){
+    //Base case when the pointers are at the last node of each list
+    if (this.next == null && inList.next == null){
+      return (this.aminoAcid == inList.aminoAcid) ? this.codonDiff(inList) : this.totalCount() + inList.totalCount();
+    }
     //Case when there is at least a null reference
-    if (this.next == null || inList == null){
-      if (inList == null){
-        return this.totalCount();
+    if(this.next == null || inList.next == null){
+      //Cases when this is the last node
+      if(this.next == null){
+        //If statements to check if there is a possibility of a matching node, if there is not return the total counts of the remaining lists
+        if (this.aminoAcid < inList.aminoAcid){
+          return this.totalCount() + aminoCompareRestOfList(inList);
+        }if (this.aminoAcid > inList.aminoAcid){
+          return inList.totalCount() + this.aminoAcidCompare(inList.next);
+        }else {
+          return this.codonDiff(inList) + aminoCompareRestOfList(inList.next);
+        }
+        //inList.next is null
       }else{
-        return inList.totalCount() + this.codonCompare(inList.next);
+        //If statements to check if there is a possibility of a matching node, if there is not return the total counts of the remaining lists
+        if(inList.aminoAcid < this.aminoAcid ){
+          return inList.totalCount() + aminoCompareRestOfList(this);
+        }if(inList.aminoAcid > this.aminoAcid){
+          return this.totalCount() + this.next.aminoAcidCompare(inList);
+        }else{
+          return this.codonDiff(inList) + aminoCompareRestOfList(this.next);
+        }
       }
     }
     //Case when aminoacids match
@@ -193,7 +236,7 @@ class AminoAcidLL{
   public static AminoAcidLL createFromRNASequence(String inSequence){
     //If the sequence has less than the length of a codon it returns null
     if (inSequence.length() < 3){
-      return null;
+      return new AminoAcidLL();
     }
     //Gets the first codon
     String nextCodon = inSequence.substring(0, 3);
@@ -226,7 +269,11 @@ class AminoAcidLL{
   /********************************************************************************************/
   /* sorts a list by amino acid character*/
   public static AminoAcidLL sort(AminoAcidLL inList){
+    if(inList == null){
+      return new AminoAcidLL();
+    }
     //Pointers to not lose track the references of the lists
+
     AminoAcidLL beforeNode = inList;
     AminoAcidLL checkingNode = beforeNode.next;
     AminoAcidLL nextNode = null;
@@ -258,15 +305,7 @@ class AminoAcidLL{
   }
 
   /********************************************************************************************/
-  public void printList(){
-    AminoAcidLL pointer = this;
-    while(pointer != null) {
-      System.out.print(pointer.aminoAcid);
-      pointer = pointer.next;
-    }
-    System.out.println("");
-  }
-  /********************************************************************************************/
+  /*Helper method that searches for the position where a node should be inserted*/
   private static AminoAcidLL findInsertionPosition(AminoAcidLL inList, AminoAcidLL aminoAcid){
     AminoAcidLL head = inList;
     char checkingLetter = aminoAcid.aminoAcid;
@@ -278,5 +317,17 @@ class AminoAcidLL{
       checkingPosition = checkingPosition.next;
     }
     return position;
+  }
+
+  /********************************************************************************************/
+  /*Helper method to obtain the sum of the counts of the remaining nodes*/
+  private static int aminoCompareRestOfList(AminoAcidLL list){
+    int count = 0;
+    AminoAcidLL pointer = list;
+    while(pointer != null){
+      count += pointer.totalCount();
+      pointer = pointer.next;
+    }
+    return count;
   }
 }

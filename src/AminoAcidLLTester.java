@@ -66,4 +66,69 @@ public class AminoAcidLLTester {
         AminoAcidLL dummy = AminoAcidLL.createFromRNASequence(testSequence);
         assertArrayEquals(expected, dummy.aminoAcidCounts());
     }
+
+    @Test
+    public void AminoAcidLLTest7(){
+        //Test for aminoAcidCompare, regular performance test
+        //Test list1 = AAATTCDD
+        //Test list2 = GGGAAATTD
+        //Expected difference: 5
+        AminoAcidLL list1 = AminoAcidLL.createFromRNASequence("GAGGAGGAGACCACCUGCGACGACUAG");
+        AminoAcidLL list2 = AminoAcidLL.createFromRNASequence("GGUGGUGGUGAGGAGGAGACCACCGACUAG");
+        list1 = AminoAcidLL.sort(list1);
+        list2 = AminoAcidLL.sort(list2);
+        assertEquals(5, list1.aminoAcidCompare(list2));
+    }
+
+    @Test
+    public void AminoAcidLLTest8(){
+        //Test for aminoAcidCompare, different amino acids
+        //Test list1 = GEAV
+        //Test list2 = GGGAAATTD
+        //Expected difference: 9
+        AminoAcidLL list1 = AminoAcidLL.createFromRNASequence("GGGGAGGCGGUGUGA");
+        AminoAcidLL list2 = AminoAcidLL.createFromRNASequence("GGUGGUGGUGAGGAGGAGACCACCGACUAG");
+        list1 = AminoAcidLL.sort(list1);
+        list2 = AminoAcidLL.sort(list2);
+        assertEquals(9, list1.aminoAcidCompare(list2));
+    }
+
+    @Test
+    public void AminoAcidLLTest9(){
+        //Test for aminoAcidCompare with an empty list, edge case test
+        //Test list2 = nothing
+        //Test list1 = GGGAAATTD
+        //Expected difference: 9
+        AminoAcidLL list2 = AminoAcidLL.createFromRNASequence("UAG");
+        AminoAcidLL list1 = AminoAcidLL.createFromRNASequence("GGUGGUGGUGAGGAGGAGACCACCGACUAG");
+        list1 = AminoAcidLL.sort(list1);
+        list2 = AminoAcidLL.sort(list2);
+        assertEquals(9, list1.aminoAcidCompare(list2));
+    }
+
+    @Test
+    public void AminoAcidLLTest10(){
+        //Test for codonCompare, where they have the same aminoacids
+        //Test list1 =  "GEAA"
+        //Test list2 =  "GGEAA"
+        //Did not repeat any codons
+        AminoAcidLL list1 = AminoAcidLL.createFromRNASequence("GGGGAGGCCGCUUAG");
+        AminoAcidLL list2 = AminoAcidLL.createFromRNASequence("GGAGGCGAAGCGGCAUAG");
+        list1 = AminoAcidLL.sort(list1);
+        list2 = AminoAcidLL.sort(list2);
+        assertEquals(9, list1.codonCompare(list2));
+    }
+
+    @Test
+    public void AminoAcidLLTest11(){
+        //Test for codonCompare, where they have aminoacids with different codon combinations
+        //Test list1 =  "GEAAQHP"
+        //Test list2 =  "GGEAAQRF"
+        //Did not repeat any codons
+        AminoAcidLL list1 = AminoAcidLL.createFromRNASequence("GGGCAGCACCCAGAGGCCGCUUAG");
+        AminoAcidLL list2 = AminoAcidLL.createFromRNASequence("GGACAGCGAUUCGGCGAAGCGGCAUAG");
+        list1 = AminoAcidLL.sort(list1);
+        list2 = AminoAcidLL.sort(list2);
+        assertEquals(13, list1.codonCompare(list2));
+    }
 }
